@@ -20,18 +20,21 @@
     <div class="signinpage" id="signinpage">
         <h2>Sign In page</h2>
         <label for="">User ID : </label>
-        <input type="text" id="signInUserID">
+        <input type="number" id="signInUserID">
         <button id="newsignin" class="signin" onclick="signIn()">Signin</button>
     </div>
     <div class="signuppage" id="signuppage">
         <h2>SignUp Page</h2>
         <label for="">UserName :</label>
         <input type="text" id="signUpUserName">
-        <label for="">User Age : </label>
-        <input type="number" id="SignUpAge">
         <label for="">UserPhoneNumber : </label>
         <input type="number" id="signUpPhoneNumber">
+        <label for="">Balance : </label>
+        <input type="number" id="signUpBalance">
         <button class="signup" id="newsignup" onclick="signUp()">SignUp</button>
+    </div>
+    <div id="welcome" style="display: none;">
+        <h2 id="welcomemsg">Hi</h2>
     </div>
     <div class="loggedInPage" id="loggedInPage">
         <button onclick="showMedicinePage()">MedicineList</button>
@@ -50,6 +53,7 @@
             <input type="number" id="mQuantity">
             <label for="">Price</label>
             <input type="number" id="mPrice">
+            <button onclick="Edit()">Edit</button>
         </form>
         <table border="1" id="medicineList1">
             <thead>
@@ -76,7 +80,7 @@
         <div class="takeorder" id="takeorder">
             <label for="">Quantity</label>
             <input type="number" id="medicineCount">
-            <button onclick="takeOrder()">Buy Medicine</button>
+
 
         </div>
     </div>

@@ -1,69 +1,33 @@
-let staticUserID: number = 1001;
-let staticMedicineID: number = 101;
-let staticOrderID: number = 101;
+let staticUserID: number = 4;
+let staticMedicineID: number = 6;
+let staticOrderID: number = 4;
 let currentLoggedInUser: UserDetails;
-enum OrderStatus {
-    Purchased = "Purchased",
-    Cancelled = "Cancelled"
-};
-
-class UserDetails {
-    userId: string;
+interface UserDetails {
+    userID: number;
     userName: string;
-    userAge: number;
     userPhoneNumber: number;
-    balance: number;
-    constructor(paramUserName: string, paramuserAge: number, paramuserPhoneNumber: number,parambal : number) {
-        this.userId = "UI" + (staticUserID++);
-        this.userName = paramUserName;
-        this.userAge = paramuserAge;
-        this.userPhoneNumber = paramuserPhoneNumber;
-        this.balance = parambal;
-    }
+    userBalance: number;
 }
-let userArrayList: Array<UserDetails> = new Array<UserDetails>();
-userArrayList.push(new UserDetails("Hemanth", 23, 9789011226,500));
-userArrayList.push(new UserDetails("Harish", 23, 9445153060,500));
 
-class MedicineDetails {
-    medicineID: string;
+interface MedicineDetails {
+    medicineID: number;
     medicineName: string;
     medicineCount: number
-    price: number
-    constructor(paramMedicinename: string, paramMedicineCount: number, paramPrice: number) {
-        this.medicineID = "MID" + (staticMedicineID++);
-        this.medicineName = paramMedicinename;
-        this.medicineCount = paramMedicineCount;
-        this.price = paramPrice;
-    }
+    medicinePrice: number
 
 }
-let medicineList: Array<MedicineDetails> = new Array<MedicineDetails>();
-medicineList.push(new MedicineDetails("Paracetomol", 5, 50));
-medicineList.push(new MedicineDetails("Colpal", 5, 60));
-medicineList.push(new MedicineDetails("Stepsil", 5, 70));
-medicineList.push(new MedicineDetails("Iodex", 5, 80));
-medicineList.push(new MedicineDetails("Acetherol", 5, 100));
 
-class OrderDetails {
-    orderID: string;
-    medicineID: string;
+interface OrderDetails {
+    orderID: number;
+    medicineID: number;
     medicineName: string
     quantity: number;
     price: number;
-    orderStatus: OrderStatus;
-    constructor(parammedcineID: string, parammedicineName: string, paramQuantity: number, paramprice: number, paramorderstatus: OrderStatus) {
-        this.orderID = "OID" + (staticOrderID++);
-        this.medicineID = parammedcineID;
-        this.medicineName = parammedicineName
-        this.quantity = paramQuantity;
-        this.price = paramprice;
-        this.orderStatus = paramorderstatus;
-    }
+    orderStatus: string;
 
 }
-let orderList: Array<OrderDetails> = new Array<OrderDetails>();
 
+let editingID : number;
 
 function homesignin() {
     (document.getElementById("signinpage") as HTMLDivElement).style.display = "block";
@@ -73,24 +37,29 @@ function homesignup() {
     (document.getElementById("signuppage") as HTMLDivElement).style.display = "block";
     (document.getElementById("homepage") as HTMLDivElement).style.display = "none";
 }
-function signUp() {
+async function signUp() {
     let username: string = (document.getElementById("signUpUserName") as HTMLInputElement).value;
-    let age: number = parseInt((document.getElementById("signUpUserName") as HTMLInputElement).value);
-    let phoneNumber: number = parseInt((document.getElementById("signUpUserName") as HTMLInputElement).value);
-    userArrayList.push(new UserDetails(username, age, phoneNumber,500));
-    alert("Saved Successfully !");
+    let phoneNumber: number = parseInt((document.getElementById("signUpPhoneNumber") as HTMLInputElement).value);
+    let balance: number = parseInt((document.getElementById("signUpBalance") as HTMLInputElement).value);
+    const newUser: UserDetails = { userID: staticUserID++, userName: username, userPhoneNumber: phoneNumber, userBalance: balance };
+    addUserDetails(newUser);
+
+    
     (document.getElementById("signuppage") as HTMLDivElement).style.display = "none";
     (document.getElementById("homepage") as HTMLDivElement).style.display = "block";
 }
 
-function signIn() {
-    let userID: string = (document.getElementById("signInUserID") as HTMLInputElement).value.toUpperCase();
+async function signIn() {
+    let userID: number = parseInt((document.getElementById("signInUserID") as HTMLInputElement).value);
     let flag: boolean = true;
+    const userArrayList = await fetchUsers();
     userArrayList.forEach(element => {
-        if (element.userId === userID) {
+        if (element.userID === userID) {
             currentLoggedInUser = element;
             flag = false;
             alert("You Have successfully logged in ! ");
+            (document.getElementById("welcome") as HTMLDivElement).style.display = "block";
+            (document.getElementById("welcomemsg") as HTMLElement).innerHTML = `<h2>Hi ${currentLoggedInUser.userName}</h2>`;
             (document.getElementById("loggedInPage") as HTMLDivElement).style.display = "flex";
             (document.getElementById("signinpage") as HTMLDivElement).style.display = "none";
 
@@ -101,7 +70,7 @@ function signIn() {
     }
 }
 
-function showMedicinePage() {
+async function showMedicinePage() {
     (document.getElementById("medicinePage") as HTMLTableElement).style.display = "block";
     (document.getElementById("orderHistorypage") as HTMLTableElement).style.display = "none";
     (document.getElementById("takeOrderPage") as HTMLTableElement).style.display = "none";
@@ -115,41 +84,56 @@ function showMedicinePage() {
     <th>Price</th>
     <th>Action</th>
 </tr>`
+    const medicineList = await fetchMedicines();
     medicineList.forEach(medicine => {
         if (medicine.medicineCount > 0) {
-            medicinedet.innerHTML += `<tr><td>${medicine.medicineName}</td><td>${medicine.medicineCount}</td><td>${medicine.price}</td><td><button>Edit</button><button onclick="DeleteMedicine('${medicine.medicineID}')">Delete</button></td></tr>`
+            medicinedet.innerHTML += `<tr><td>${medicine.medicineName}</td><td>${medicine.medicineCount}</td><td>${medicine.medicinePrice}</td><td><button onclick = "EditMedicine('${medicine.medicineID}')">Edit</button><button onclick="deleteMedicineDetails('${medicine.medicineID}')">Delete</button></td></tr>`
         }
     });
 }
-function AddMedicine(){
+async function AddMedicine() {
     let mName = (document.getElementById("mName") as HTMLInputElement).value;
     let mQuantity = parseInt((document.getElementById("mQuantity") as HTMLInputElement).value);
     let mPrice = parseInt((document.getElementById("mPrice") as HTMLInputElement).value);
-    medicineList.push(new MedicineDetails(mName,mQuantity,mPrice));
-    alert("Medicine Added Successfully !")
+    const newMedicine: MedicineDetails = { medicineID: staticMedicineID++, medicineName: mName, medicineCount: mQuantity, medicinePrice: mPrice };
+    addMedicineDetails(newMedicine);
+    alert("Medicine Added Successfully !");
     showMedicinePage();
 }
-function DeleteMedicine(mID: string)
-{
-    let count: number;
-    medicineList.forEach(medicine => {
-        if(mID==medicine.medicineID){
-            delete medicineList[count];
-            alert("Medicine Deleted Successfully ! ")
-            showMedicinePage();
-        }
-        count+=1;
-    });
-}
-function AddQuantity(medID : string){
-    
-    medicineList.forEach(medicine => {
-        if(medID==medicine.medicineID){
+async function EditMedicine(mId : number){
+    alert("medicine")
+let mName = (document.getElementById("mName") as HTMLInputElement);
+let mQuantity = (document.getElementById("mQuantity") as HTMLInputElement);
+let mPrice = (document.getElementById("mPrice") as HTMLInputElement);
 
-        }
-    });
+const medicineList = await fetchMedicines();
+medicineList.forEach(list=>{
+    if(list.medicineID==mId){
+        editingID = mId;
+        mName.value=list.medicineName;
+        mQuantity.value = String(list.medicineCount);
+        mPrice.value = String(list.medicinePrice);
+    }
 }
-function takeOrderPage() {
+)
+}
+
+function Edit()
+{
+let mName = (document.getElementById("mName") as HTMLInputElement).value;
+let mQuantity = (document.getElementById("mQuantity") as HTMLInputElement).value;
+let mPrice = (document.getElementById("mPrice") as HTMLInputElement).value;
+const medicine: MedicineDetails = {
+    medicineID:editingID,
+    medicineName:mName,
+    medicineCount:Number(mQuantity),
+    medicinePrice:Number(mPrice)
+}
+updateMedicineDetails(editingID,medicine)
+}
+
+
+async function takeOrderPage() {
     (document.getElementById("medicinePage") as HTMLTableElement).style.display = "none";
     (document.getElementById("orderHistorypage") as HTMLTableElement).style.display = "none";
     (document.getElementById("takeOrderPage") as HTMLTableElement).style.display = "block";
@@ -167,31 +151,34 @@ function takeOrderPage() {
     <th>Price</th>
     <th>Action</th>
 </tr>`
+    const medicineList = await fetchMedicines();
     medicineList.forEach(medicine => {
         if (medicine.medicineCount > 0) {
-            medicinedet.innerHTML += `<tr><td>${medicine.medicineName}</td><td>${medicine.medicineCount}</td><td>${medicine.price}</td><td><button onclick ="takeOrder('${medicine.medicineID}')">Buy</button></td></tr>`
+            medicinedet.innerHTML += `<tr><td>${medicine.medicineName}</td><td>${medicine.medicineCount}</td><td>${medicine.medicinePrice}</td><td><button onclick ="takeOrder('${medicine.medicineID}')">Buy</button></td></tr>`
         }
     });
 
 }
 
-function takeOrder(mID : string) {
+async function takeOrder(mID: number) {
 
     let mcount: number = parseInt((document.getElementById("medicineCount") as HTMLInputElement).value);
     let flag: boolean = true;
+    const medicineList = await fetchMedicines();
     medicineList.forEach(medicine => {
-        if (mID === medicine.medicineID) {
+        if (mID == medicine.medicineID) {
             flag = false;
             if (mcount > medicine.medicineCount) {
                 alert("Your count exceeds the medicine Count !");
             }
             else {
-                let tempprice: number = (mcount * medicine.price);
-                if (currentLoggedInUser.balance > tempprice) {
+                let tempprice: number = (mcount * medicine.medicinePrice);
+                if (currentLoggedInUser.userBalance > tempprice) {
                     medicine.medicineCount -= mcount;
-                    currentLoggedInUser.balance-=tempprice;
+                    currentLoggedInUser.userBalance -= tempprice;
                     alert("You have successfully bought the Medicine !");
-                    orderList.push(new OrderDetails(medicine.medicineID, medicine.medicineName, mcount, tempprice, OrderStatus.Purchased));
+                    const newOrder: OrderDetails = { orderID: staticOrderID++, medicineID: mID, medicineName: medicine.medicineName, quantity:mcount,price:tempprice,orderStatus:"Ordered"};
+                    addOrderDetails(newOrder);
                     (document.getElementById("medicineList1") as HTMLTableElement).style.display = "block";
                     takeOrderPage();
 
@@ -208,7 +195,7 @@ function takeOrder(mID : string) {
 
 }
 
-function CancelOrderPage() {
+async function CancelOrderPage() {
     (document.getElementById("medicinePage") as HTMLTableElement).style.display = "none";
     (document.getElementById("orderHistorypage") as HTMLTableElement).style.display = "none";
     (document.getElementById("takeOrderPage") as HTMLTableElement).style.display = "none";
@@ -227,25 +214,27 @@ function CancelOrderPage() {
                 <th>Order Status</th>
                 <th>Action</th>
             </tr>`;
-            cancelorderdet.style.width = "fit-content";
+    const orderList = await fetchOrder();
+    cancelorderdet.style.width = "fit-content";
     orderList.forEach(order => {
-        if (order.orderStatus == OrderStatus.Purchased) {
-                cancelorderdet.innerHTML += `<tr><td>${order.orderID}</td><td>${order.medicineID}</td><td>${order.medicineName}</td><td>${order.quantity}</td><td>${order.price}</td><td>${order.orderStatus}</td><td><button onclick="CancelOrder('${order.orderID}')">Cancel</button></td></tr>`;
+        if (order.orderStatus == "ordered") {
+            cancelorderdet.innerHTML += `<tr><td>${order.orderID}</td><td>${order.medicineID}</td><td>${order.medicineName}</td><td>${order.quantity}</td><td>${order.price}</td><td>${order.orderStatus}</td><td><button onclick="CancelOrder('${order.orderID}')">Cancel</button></td></tr>`;
         }
     });
 
 }
-function CancelOrder(orderID: string) {
-    orderList.forEach(order => {
+async function CancelOrder(orderID: number) {
+    const orderList = await fetchOrder();
+    orderList.forEach(async order => {
         if (orderID == order.orderID) {
-            if (order.orderStatus == OrderStatus.Purchased) {
-                order.orderStatus = OrderStatus.Cancelled;
-                currentLoggedInUser.balance += order.price;
+            if (order.orderStatus == "ordered") {
+                order.orderStatus = "cancelled";
+                currentLoggedInUser.userBalance += order.price;
+                const medicineList = await fetchMedicines();
                 medicineList.forEach(medicine => {
-                    if(medicine.medicineID == order.medicineID)
-                        {
-                            medicine.medicineCount+=order.quantity;
-                        }
+                    if (medicine.medicineID == order.medicineID) {
+                        medicine.medicineCount += order.quantity;
+                    }
                 });
                 alert("Order is now Cancelled ! ");
             }
@@ -255,7 +244,7 @@ function CancelOrder(orderID: string) {
 
 }
 
-function orderHistory() {
+async function orderHistory() {
     (document.getElementById("medicinePage") as HTMLTableElement).style.display = "none";
     (document.getElementById("orderHistorypage") as HTMLTableElement).style.display = "block";
     (document.getElementById("takeOrderPage") as HTMLTableElement).style.display = "none";
@@ -273,6 +262,7 @@ function orderHistory() {
         <th>Order Status</th>
     </tr>`;
     orderdet.style.width = "fit-content";
+    const orderList = await fetchOrder();
     orderList.forEach(order => {
         if (order.quantity > 0) {
             orderdet.innerHTML += `<tr><td>${order.orderID}</td><td>${order.medicineID}</td><td>${order.medicineName}</td><td>${order.quantity}</td><td>${order.price}</td><td>${order.orderStatus}</td></tr>`
@@ -289,7 +279,7 @@ function WalletBalancePage() {
     (document.getElementById("walletBalancePage") as HTMLDivElement).style.display = "block";
     (document.getElementById("topupPage") as HTMLDivElement).style.display = "none";
     let balancedet = (document.getElementById("walletBalance") as HTMLElement);
-    balancedet.innerHTML = `<h2>Your Balance : ${currentLoggedInUser.balance}</h2>`;
+    balancedet.innerHTML = `<h2>Your Balance : ${currentLoggedInUser.userBalance}</h2>`;
 }
 function TopUpPage() {
     (document.getElementById("medicinePage") as HTMLTableElement).style.display = "none";
@@ -302,11 +292,126 @@ function TopUpPage() {
 function TopUp() {
     let amount = parseInt((document.getElementById("topUpAmount") as HTMLInputElement).value);
     if (amount > 0) {
-        currentLoggedInUser.balance += amount;
+        currentLoggedInUser.userBalance += amount;
         alert("your recharge has been successfull ! ");
     }
     else {
         alert("enter valid amount ")
     }
 
+}
+
+
+
+
+
+
+async function addUserDetails(UserDetails: UserDetails): Promise<void> {
+    const response = await fetch(`http://localhost:5250/api/userdetails`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(UserDetails),
+        });
+    if (!response.ok) {
+        throw new Error("Failed to add User Details");
+    }
+
+}
+
+async function addMedicineDetails(MedicineDetails: MedicineDetails): Promise<void> {
+    const response = await fetch(`http://localhost:5250/api/medicinedetails`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(MedicineDetails),
+        });
+    if (!response.ok) {
+        throw new Error("Failed to add Medicine Details");
+    }
+}
+
+async function addOrderDetails(OrderDetails: OrderDetails): Promise<void> {
+    const response = await fetch(`http://localhost:5250/api/orderdetails`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(OrderDetails),
+        });
+    if (!response.ok) {
+        throw new Error("Failed to add order Details");
+    }
+
+}
+
+async function updateMedicineDetails(id: number, MedicineDetails: MedicineDetails): Promise<void> {
+    const response = await fetch(`http://localhost:5250/api/medicinedetails/${id}`,
+        {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(MedicineDetails),
+        });
+    if (!response.ok) {
+        throw new Error("Failed to add User Details");
+    }
+    showMedicinePage();
+    
+
+}
+
+async function updateOrderDetails(id: number, OrderDetails: OrderDetails): Promise<void> {
+    const response = await fetch(`http://localhost:5250/api/orderdetails/${id}`,
+        {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(OrderDetails),
+        });
+    if (!response.ok) {
+        throw new Error("Failed to add User Details");
+    }
+}
+
+async function deleteMedicineDetails(id: number): Promise<void> {
+    const response = await fetch(`http://localhost:5250/api/medicinedetails/${id}`,
+        {
+            method: 'DELETE'
+        });
+    if (!response.ok) {
+        throw new Error('Failed to delete contact');
+    }
+
+}
+
+
+
+async function fetchUsers(): Promise<UserDetails[]> {
+    const response = await fetch(`http://localhost:5250/api/userdetails`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch user details');
+    }
+    return await response.json();
+}
+async function fetchMedicines(): Promise<MedicineDetails[]> {
+    const response = await fetch(`http://localhost:5250/api/medicinedetails`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch user details');
+    }
+    return await response.json();
+}
+async function fetchOrder(): Promise<OrderDetails[]> {
+    const response = await fetch(`http://localhost:5250/api/orderdetails`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch user details');
+    }
+    return await response.json();
 }
