@@ -1,0 +1,71 @@
+.homepage{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0px auto;
+    padding: 50px;
+    border-radius: 5px;
+    border: 1px solid black;
+    width: fit-content;
+}
+
+.signin,.signup{
+    background-color: red;
+    color: white;
+    font-family: sans-serif;
+    padding: 10px;
+    font-size: 20px;
+    border: none;
+    margin: 20px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+.signin:hover,.signup:hover{
+    background-color: white;
+    color: black;
+}
+.signinpage{
+    padding: 50px;
+    border-radius: 5px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    margin: 0px auto;
+    display: none;
+}
+
+.signuppage{
+    padding: 50px;
+    border-radius: 5px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    margin: 0px auto;
+    display: none;
+}
+.loggedInPage{
+    margin: 10px;
+    display: none;
+}
+.loggedInPage button{
+font-family: sans-serif;
+font-weight: bold;
+padding: 10px;
+border: none;
+margin: 0px;
+width: 16.6%;
+}
+.loggedInPage button:hover{
+background-color: red;
+color: white;
+}
+#medicineList{
+    width: fit-content;
+}
+.takeorder{
+    display: none;
+    flex-direction: column;
+    width: 200px;
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Medical Store</title>
+    <link rel="stylesheet" href="style/style.css">
+    <script src="js/script.js"></script>
+</head>
+
+<body>
+    <div class="homepage" id="homepage">
+        <h2>HOME</h2>
+        <div class="signbuttons">
+            <button class="signin" id="homesignin" onclick="homesignin()">Sign IN</button>
+            <button class="signup" id="homesignup" onclick="homesignup()">Sign UP</button>
+        </div>
+    </div>
+    <div class="signinpage" id="signinpage">
+        <h2>Sign In page</h2>
+        <label for="">User ID : </label>
+        <input type="text" id="signInUserID">
+        <button id="newsignin" class="signin" onclick="signIn()">Signin</button>
+    </div>
+    <div class="signuppage" id="signuppage">
+        <h2>SignUp Page</h2>
+        <label for="">UserName :</label>
+        <input type="text" id="signUpUserName">
+        <label for="">User Age : </label>
+        <input type="number" id="SignUpAge">
+        <label for="">UserPhoneNumber : </label>
+        <input type="number" id="signUpPhoneNumber">
+        <button class="signup" id="newsignup" onclick="signUp()">SignUp</button>
+    </div>
+    <div class="loggedInPage" id="loggedInPage">
+        <button onclick="showMedicinePage()">MedicineList</button>
+        <button onclick="takeOrderPage()">Take Order</button>
+        <button onclick="CancelOrderPage()">Cancel Order</button>
+        <button onclick="orderHistory()">Order History</button>
+        <button onclick="WalletBalancePage()">Wallet Balance</button>
+        <button onclick="TopUpPage()">Top Up</button>
+    </div>
+    <div class="medicineList" id="medicinePage" style="display: none;">
+        <button onclick="AddMedicine()">Add Medicine</button>
+        <form action="">
+            <label for="">Medicine Name : </label>
+            <input type="text" id="mName">
+            <label for="">Quantity : </label>
+            <input type="number" id="mQuantity">
+            <label for="">Price</label>
+            <input type="number" id="mPrice">
+        </form>
+        <table border="1" id="medicineList1">
+            <thead>
+                <tr>
+                    <th>Medicine ID</th>
+                    <th>Medicine Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="takeOrderPage" id="takeOrderPage" style="display: none;">
+        <table border="1" id="takeOrderMedicineList">
+            <thead>
+                <tr>
+                    <th>Medicine ID</th>
+                    <th>Medicine Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+        </table>
+        <div class="takeorder" id="takeorder">
+            <label for="">Quantity</label>
+            <input type="number" id="medicineCount">
+            <button onclick="takeOrder()">Buy Medicine</button>
+
+        </div>
+    </div>
+    <div class="orderHistoryclass" id="orderHistorypage" style="display: none;">
+        <table border="1" id="orderHistory">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Medicine ID</th>
+                    <th>Medicine Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Order Status</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="CancelOrderPage" id="cancelOrderPage" style="display: none;">
+        <table border="1" id="ordered">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Medicine ID</th>
+                    <th>Medicine Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Order Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="walletBalancePage" id="walletBalancePage" style="display: none;">
+        <h2 id="walletBalance"></h2>
+    </div>
+    <div class="Topup" id="topupPage" style="display: none;">
+        <h3>Enter the amount to Recharge : <input type="number" id="topUpAmount"></h3>
+        <button onclick="TopUp()">Recharge</button>
+    </div>
+</body>
+
+</html>
