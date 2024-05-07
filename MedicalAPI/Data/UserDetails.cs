@@ -15,6 +15,8 @@ namespace MedicalAPI.Data
         public int UserID { get; set; }
         public string UserName {get; set;}
         public long UserPhoneNumber { get; set; }
+        public string UserMailID {get;set;}
+        public string Password {get;set;}
         public double UserBalance { get; set; }
     }
 }

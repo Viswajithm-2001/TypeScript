@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\ViswajithMathialagan\\OneDrive - Syncfusion\\Desktop\\MedicalAPI\\MedicalAPI.csproj": {}
+    "C:\\Users\\ViswajithMathialagan\\OneDrive - Syncfusion\\Desktop\\ts\\GitWithAPI\\TypeScript\\MedicalAPI\\MedicalAPI.csproj": {}
   },
   "projects": {
-    "c:\\Users\\ViswajithMathialagan\\OneDrive - Syncfusion\\Desktop\\MedicalAPI\\MedicalAPI.csproj": {
+    "C:\\Users\\ViswajithMathialagan\\OneDrive - Syncfusion\\Desktop\\ts\\GitWithAPI\\TypeScript\\MedicalAPI\\MedicalAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\ViswajithMathialagan\\OneDrive - Syncfusion\\Desktop\\MedicalAPI\\MedicalAPI.csproj",
+        "projectUniqueName": "C:\\Users\\ViswajithMathialagan\\OneDrive - Syncfusion\\Desktop\\ts\\GitWithAPI\\TypeScript\\MedicalAPI\\MedicalAPI.csproj",
         "projectName": "MedicalAPI",
-        "projectPath": "c:\\Users\\ViswajithMathialagan\\OneDrive - Syncfusion\\Desktop\\MedicalAPI\\MedicalAPI.csproj",
+        "projectPath": "C:\\Users\\ViswajithMathialagan\\OneDrive - Syncfusion\\Desktop\\ts\\GitWithAPI\\TypeScript\\MedicalAPI\\MedicalAPI.csproj",
         "packagesPath": "C:\\Users\\ViswajithMathialagan\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\ViswajithMathialagan\\OneDrive - Syncfusion\\Desktop\\MedicalAPI\\obj\\",
+        "outputPath": "C:\\Users\\ViswajithMathialagan\\OneDrive - Syncfusion\\Desktop\\ts\\GitWithAPI\\TypeScript\\MedicalAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ViswajithMathialagan\\AppData\\Roaming\\NuGet\\NuGet.Config"

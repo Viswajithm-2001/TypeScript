@@ -10,33 +10,44 @@
 </head>
 
 <body>
-    <div class="homepage" id="homepage">
+    <div class="homepage" id="homepage" style="background-color: whitesmoke;">
         <h2>HOME</h2>
         <div class="signbuttons">
             <button class="signin" id="homesignin" onclick="homesignin()">Sign IN</button>
             <button class="signup" id="homesignup" onclick="homesignup()">Sign UP</button>
         </div>
     </div>
-    <div class="signinpage" id="signinpage">
+    <div class="signinpage" id="signinpage" style="background-color: whitesmoke; border: none;">
         <h2>Sign In page</h2>
-        <label for="">User ID : </label>
-        <input type="number" id="signInUserID">
+        <label for="">Email ID : </label>
+        <input type="text" id="signInUserID">
+        <label for="">Password</label>
+        <input type="password" id="signinpwd">
         <button id="newsignin" class="signin" onclick="signIn()">Signin</button>
     </div>
-    <div class="signuppage" id="signuppage">
+    <div class="signuppage" id="signuppage" style="background-color: whitesmoke; border: none;">
         <h2>SignUp Page</h2>
         <label for="">UserName :</label>
         <input type="text" id="signUpUserName">
         <label for="">UserPhoneNumber : </label>
         <input type="number" id="signUpPhoneNumber">
+        <label for="">User Mail ID</label>
+        <input type="text" id="signUpMail">
+        <label for="">Enter Password</label>
+        <input type="password" id="signUpPwd">
+        <label for="">Confirm Password</label>
+        <input type="password" id="confirmpwd">
         <label for="">Balance : </label>
         <input type="number" id="signUpBalance">
         <button class="signup" id="newsignup" onclick="signUp()">SignUp</button>
     </div>
+   
+    
     <div id="welcome" style="display: none;">
         <h2 id="welcomemsg">Hi</h2>
+        <button onclick="homepage()" id="signoutbtn">SignOut</button>
     </div>
-    <div class="loggedInPage" id="loggedInPage">
+    <div class="loggedInPage" id="loggedInPage" style="display: none;">
         <button onclick="showMedicinePage()">MedicineList</button>
         <button onclick="takeOrderPage()">Take Order</button>
         <button onclick="CancelOrderPage()">Cancel Order</button>
@@ -45,7 +56,7 @@
         <button onclick="TopUpPage()">Top Up</button>
     </div>
     <div class="medicineList" id="medicinePage" style="display: none;">
-        <button onclick="AddMedicine()">Add Medicine</button>
+        <button onclick="AddMedicine()" id="addMedicine">Add Medicine</button>
         <form action="">
             <label for="">Medicine Name : </label>
             <input type="text" id="mName">
@@ -53,21 +64,24 @@
             <input type="number" id="mQuantity">
             <label for="">Price</label>
             <input type="number" id="mPrice">
-            <button onclick="Edit()">Edit</button>
+            <label for="">Expiry Date</label>
+            <input type="date" id="mExpiry">
+            <button onclick="Edit()" type="button" style="background-color: red;color: white;padding: 10px;">Submit</button>
         </form>
-        <table border="1" id="medicineList1">
+        <table border="1" id="medicineList1" style="background-color: white;">
             <thead>
                 <tr>
                     <th>Medicine ID</th>
                     <th>Medicine Name</th>
                     <th>Quantity</th>
                     <th>Price</th>
+                    <th>Action</th>
                 </tr>
             </thead>
         </table>
     </div>
     <div class="takeOrderPage" id="takeOrderPage" style="display: none;">
-        <table border="1" id="takeOrderMedicineList">
+        <table border="1" id="takeOrderMedicineList" style="background-color: white;">
             <thead>
                 <tr>
                     <th>Medicine ID</th>
@@ -80,12 +94,12 @@
         <div class="takeorder" id="takeorder">
             <label for="">Quantity</label>
             <input type="number" id="medicineCount">
-
+            <button onclick="submitOrder()" id="orderbtn">Submit</button>
 
         </div>
     </div>
     <div class="orderHistoryclass" id="orderHistorypage" style="display: none;">
-        <table border="1" id="orderHistory">
+        <table border="1" id="orderHistory" style="background-color: white;">
             <thead>
                 <tr>
                     <th>Order ID</th>
@@ -99,7 +113,7 @@
         </table>
     </div>
     <div class="CancelOrderPage" id="cancelOrderPage" style="display: none;">
-        <table border="1" id="ordered">
+        <table border="1" id="ordered" style="background-color: white;">
             <thead>
                 <tr>
                     <th>Order ID</th>
@@ -117,8 +131,9 @@
         <h2 id="walletBalance"></h2>
     </div>
     <div class="Topup" id="topupPage" style="display: none;">
+        <h2 id="walletBalance"></h2>
         <h3>Enter the amount to Recharge : <input type="number" id="topUpAmount"></h3>
-        <button onclick="TopUp()">Recharge</button>
+        <button onclick="TopUp()" id="recharge">Recharge</button>
     </div>
 </body>
 

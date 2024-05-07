@@ -9,26 +9,27 @@ using Microsoft.Extensions.Logging;
 
 namespace MedicalAPI.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
     public class UserDetailsController : ControllerBase
     {
-        private static List<UserDetails> userList = new List<UserDetails>
+        private readonly ApplicationDBContext _dbContext;
+        public UserDetailsController(ApplicationDBContext applicationDBContext)
         {
-            new UserDetails{UserID=1,UserName="Ravi",UserPhoneNumber=987654322,UserBalance=500},
-            new UserDetails{UserID=2,UserName="Baskaran",UserPhoneNumber=934578927,UserBalance=500},
-            new UserDetails{UserID=3,UserName="Hemanth",UserPhoneNumber=634878745,UserBalance=500}
-        };
+            _dbContext=applicationDBContext;
+        }
 
         [HttpGet]
-        public IActionResult Index()
+    //Get Details
+        public IActionResult GetUserDetails()
         {
-            return Ok(userList);
+            return Ok(_dbContext.users.ToList());
         }
 
         [HttpGet("{id}")]
         public IActionResult GetUserDetails(int id)
         {
-            var user = userList.Find(m=>m.UserID == id);
+            var user=_dbContext.users.FirstOrDefault(user=>user.UserID==id);
             if(user==null)
             {
                 return NotFound();
@@ -36,34 +37,42 @@ namespace MedicalAPI.Controllers
             return Ok(user);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult PutUserDetails(int id,[FromBody] UserDetails user)
-        {
-            var index = userList.FindIndex(tempUser=>tempUser.UserID==id);
-            if(index<0)
-            {
-                return NotFound();
-            }
-            return Ok();
-        }
+
+        // [HttpPut("{id}")]
+        // public IActionResult UpdateMedicineDetails(int id,[FromBody] MedicineDetails medicine)
+        // {
+        //     var medicineOld=_dbContext.medicines.FirstOrDefault(medicine=>medicine.MedicineID==id);
+        //     if(medicineOld==null)
+        //     {
+        //         return NotFound();
+        //     }
+            
+        //     medicineOld.MedicineCount=medicine.MedicineCount;
+        //     medicineOld.MedicineName=medicine.MedicineName;
+        //     medicineOld.MedicinePrice=medicine.MedicinePrice;
+        //     _dbContext.SaveChanges();
+        //     return Ok();
+        // }
 
         [HttpPost]
-        public IActionResult PostUserDetails([FromBody] UserDetails user)
+        public IActionResult AddUserDetails([FromBody] UserDetails user)
         {
-            userList.Add(user);
+           _dbContext.users.Add(user);
+            _dbContext.SaveChanges();
             return Ok();
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeteletuserDetails([FromBody] UserDetails user)
-        {
-            var index = userList.FindIndex(user1=> user1==user);
-            if(index>0)
-            {
-                userList.Remove(user);
-                return Ok();
-            }
-            return NotFound();
-        }
+        // [HttpDelete("{id}")]
+        // public IActionResult DeteletuserDetails([FromBody] UserDetails user)
+        // {
+        //     var user1=_dbContext.users.FirstOrDefault(user1=>medicine.MedicineID==id);
+        //     if(medicine==null)
+        //     {
+        //         return NotFound();
+        //     }
+        //     _dbContext.medicines.Remove(medicine);
+        //     _dbContext.SaveChanges();
+        //     return Ok();
+        // }
     }
 }

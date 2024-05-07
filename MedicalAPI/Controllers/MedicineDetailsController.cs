@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     [Route("api/[controller]")]
     public class MedicineDetailsController:ControllerBase
@@ -25,10 +24,10 @@ namespace MedicalAPI.Controllers
             return Ok(_dbContext.medicines.ToList());
         }
         //Set Details
-         [HttpGet("{MedicineID}")]
-        public IActionResult GetIndividualMedicineDetails(int medicineID)
+        [HttpGet("{id}")]
+        public IActionResult GetIndividualMedicineDetails(int id)
         {
-            var medicine=_dbContext.medicines.FirstOrDefaultAsync(medicine=>medicine.MedicineID==medicineID);
+            var medicine=_dbContext.medicines.FirstOrDefault(medicine=>medicine.MedicineID==id);
             if(medicine==null)
             {
                 return NotFound();
@@ -43,11 +42,13 @@ namespace MedicalAPI.Controllers
             _dbContext.SaveChanges();
             return Ok();
         }
+
+        
         //Update Details
-        [HttpPut("{MedicineID}")]
-        public IActionResult UpdateMedicineDetails(int medicineID,[FromBody] MedicineDetails medicine)
+        [HttpPut("{id}")]
+        public IActionResult UpdateMedicineDetails(int id,[FromBody] MedicineDetails medicine)
         {
-            var medicineOld=_dbContext.medicines.FirstOrDefault(medicine=>medicine.MedicineID==medicineID);
+            var medicineOld=_dbContext.medicines.FirstOrDefault(medicine=>medicine.MedicineID==id);
             if(medicineOld==null)
             {
                 return NotFound();
@@ -60,10 +61,10 @@ namespace MedicalAPI.Controllers
             return Ok();
         }
         //Delete Details
-        [HttpDelete("{MedicineID}")]
-        public IActionResult DeleteMedicine(int medicineID)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteMedicine(int id)
         {
-        var medicine=_dbContext.medicines.FirstOrDefault(medicine=>medicine.MedicineID==medicineID);
+        var medicine=_dbContext.medicines.FirstOrDefault(medicine=>medicine.MedicineID==id);
             if(medicine==null)
             {
                 return NotFound();

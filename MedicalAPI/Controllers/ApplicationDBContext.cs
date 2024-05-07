@@ -13,6 +13,8 @@ namespace MedicalAPI.Controllers
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
-        public DbSet<MedicineDetails> medicines;
+        public DbSet<UserDetails> users {get;set;}
+        public DbSet<MedicineDetails> medicines {get; set;}
+        public DbSet<OrderDetails> orders {get;set;}
     }
 }

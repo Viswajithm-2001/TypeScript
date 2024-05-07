@@ -8,44 +8,75 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-let staticUserID = 4;
-let staticMedicineID = 6;
-let staticOrderID = 4;
 let currentLoggedInUser;
 let editingID;
+function homepage() {
+    document.getElementById("medicinePage").style.display = "none";
+    document.getElementById("orderHistorypage").style.display = "none";
+    document.getElementById("cancelOrderPage").style.display = "none";
+    document.getElementById("takeOrderPage").style.display = "none";
+    document.getElementById("walletBalancePage").style.display = "none";
+    document.getElementById("topupPage").style.display = "none";
+    document.getElementById("homepage").style.display = "block";
+    document.getElementById("welcomemsg").style.display = "none";
+    document.getElementById("loggedInPage").style.display = "none";
+    document.getElementById("signoutbtn").style.display = "none";
+}
 function homesignin() {
     document.getElementById("signinpage").style.display = "block";
     document.getElementById("homepage").style.display = "none";
+    homepage();
+    document.getElementById("signuppage").style.display = "none";
 }
 function homesignup() {
     document.getElementById("signuppage").style.display = "block";
     document.getElementById("homepage").style.display = "none";
+    homepage();
+    document.getElementById("signinpage").style.display = "none";
 }
 function signUp() {
     return __awaiter(this, void 0, void 0, function* () {
         let username = document.getElementById("signUpUserName").value;
         let phoneNumber = parseInt(document.getElementById("signUpPhoneNumber").value);
         let balance = parseInt(document.getElementById("signUpBalance").value);
-        const newUser = { userID: staticUserID++, userName: username, userPhoneNumber: phoneNumber, userBalance: balance };
-        addUserDetails(newUser);
+        let mailID = document.getElementById("signUpMail").value;
+        let upassword = document.getElementById("signUpPwd").value;
+        let cpassowrd = document.getElementById("confirmpwd").value;
+        if (upassword == cpassowrd) {
+            const newUser = { userID: 0, userName: username, userPhoneNumber: phoneNumber, userBalance: balance, userMailID: mailID, password: upassword };
+            addUserDetails(newUser);
+        }
+        else {
+            alert("Enter same password");
+        }
         document.getElementById("signuppage").style.display = "none";
         document.getElementById("homepage").style.display = "block";
     });
 }
 function signIn() {
     return __awaiter(this, void 0, void 0, function* () {
-        let userID = parseInt(document.getElementById("signInUserID").value);
+        let mailID = document.getElementById("signInUserID").value;
+        let password = document.getElementById("signinpwd").value;
         let flag = true;
         const userArrayList = yield fetchUsers();
         userArrayList.forEach(element => {
-            if (element.userID === userID) {
-                currentLoggedInUser = element;
-                flag = false;
-                alert("You Have successfully logged in ! ");
-                document.getElementById("welcome").style.display = "block";
-                document.getElementById("welcomemsg").innerHTML = `<h2>Hi ${currentLoggedInUser.userName}</h2>`;
-                document.getElementById("loggedInPage").style.display = "flex";
-                document.getElementById("signinpage").style.display = "none";
+            if (element.userMailID === mailID) {
+                if (element.password == password) {
+                    currentLoggedInUser = element;
+                    flag = false;
+                    alert("You Have successfully logged in ! ");
+                    document.getElementById("welcome").style.display = "block";
+                    document.getElementById("welcomemsg").innerHTML = `<h2>Hi ${currentLoggedInUser.userName}</h2>`;
+                    document.getElementById("signoutbtn").style.display = "block";
+                    document.getElementById("welcomemsg").style.display = "flex";
+                    document.getElementById("loggedInPage").style.display = "flex";
+                    document.getElementById("signinpage").style.display = "none";
+                    document.getElementById("signuppage").style.display = "none";
+                    document.getElementById("homepage").style.display = "none";
+                }
+                else {
+                    alert("Invalid Password");
+                }
             }
         });
         if (flag) {
@@ -66,12 +97,13 @@ function showMedicinePage() {
     <th>Medicine Name</th>
     <th>Quantity</th>
     <th>Price</th>
+    <th>Expiry Date </th>
     <th>Action</th>
 </tr>`;
         const medicineList = yield fetchMedicines();
         medicineList.forEach(medicine => {
             if (medicine.medicineCount > 0) {
-                medicinedet.innerHTML += `<tr><td>${medicine.medicineName}</td><td>${medicine.medicineCount}</td><td>${medicine.medicinePrice}</td><td><button onclick = "EditMedicine('${medicine.medicineID}')">Edit</button><button onclick="deleteMedicineDetails('${medicine.medicineID}')">Delete</button></td></tr>`;
+                medicinedet.innerHTML += `<tr><td>${medicine.medicineName}</td><td>${medicine.medicineCount}</td><td>${medicine.medicinePrice}</td><td>${medicine.expiryDate.split("T")[0].split("-").reverse().join("/")}</td><td><button id="editbtn" onclick = "EditMedicine('${medicine.medicineID}')">Edit</button><button id="deletebtn" onclick="DeleteMedicine('${medicine.medicineID}')">Delete</button></td></tr>`;
             }
         });
     });
@@ -81,7 +113,8 @@ function AddMedicine() {
         let mName = document.getElementById("mName").value;
         let mQuantity = parseInt(document.getElementById("mQuantity").value);
         let mPrice = parseInt(document.getElementById("mPrice").value);
-        const newMedicine = { medicineID: staticMedicineID++, medicineName: mName, medicineCount: mQuantity, medicinePrice: mPrice };
+        let mExpiry = document.getElementById("mExpiry").value;
+        const newMedicine = { medicineID: 0, medicineName: mName, medicineCount: mQuantity, medicinePrice: mPrice, expiryDate: mExpiry };
         addMedicineDetails(newMedicine);
         alert("Medicine Added Successfully !");
         showMedicinePage();
@@ -89,7 +122,6 @@ function AddMedicine() {
 }
 function EditMedicine(mId) {
     return __awaiter(this, void 0, void 0, function* () {
-        alert("medicine");
         let mName = document.getElementById("mName");
         let mQuantity = document.getElementById("mQuantity");
         let mPrice = document.getElementById("mPrice");
@@ -108,13 +140,20 @@ function Edit() {
     let mName = document.getElementById("mName").value;
     let mQuantity = document.getElementById("mQuantity").value;
     let mPrice = document.getElementById("mPrice").value;
+    let mExpiry = document.getElementById("mExpiry").value;
     const medicine = {
         medicineID: editingID,
         medicineName: mName,
         medicineCount: Number(mQuantity),
-        medicinePrice: Number(mPrice)
+        medicinePrice: Number(mPrice),
+        expiryDate: mExpiry
     };
     updateMedicineDetails(editingID, medicine);
+    alert("Updated successfully !");
+}
+function DeleteMedicine(mID) {
+    let id = mID;
+    deleteMedicineDetails(id);
 }
 function takeOrderPage() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -131,23 +170,31 @@ function takeOrderPage() {
     <th>Medicine Name</th>
     <th>Quantity</th>
     <th>Price</th>
+    <th>Expiry Date</th>
     <th>Action</th>
 </tr>`;
         const medicineList = yield fetchMedicines();
         medicineList.forEach(medicine => {
             if (medicine.medicineCount > 0) {
-                medicinedet.innerHTML += `<tr><td>${medicine.medicineName}</td><td>${medicine.medicineCount}</td><td>${medicine.medicinePrice}</td><td><button onclick ="takeOrder('${medicine.medicineID}')">Buy</button></td></tr>`;
+                medicinedet.innerHTML += `<tr><td>${medicine.medicineName}</td><td>${medicine.medicineCount}</td><td>${medicine.medicinePrice}</td><td>${medicine.expiryDate.split("T")[0].split("-").reverse().join("/")}</td><td><button id="takeorderbtn" onclick ="takeOrder('${medicine.medicineID}')">Buy</button></td></tr>`;
             }
         });
     });
 }
+let tempID;
 function takeOrder(mID) {
+    return __awaiter(this, void 0, void 0, function* () {
+        alert("medicine selected successfully");
+        tempID = Number(mID);
+    });
+}
+function submitOrder() {
     return __awaiter(this, void 0, void 0, function* () {
         let mcount = parseInt(document.getElementById("medicineCount").value);
         let flag = true;
         const medicineList = yield fetchMedicines();
         medicineList.forEach(medicine => {
-            if (mID == medicine.medicineID) {
+            if (Number(tempID) == medicine.medicineID) {
                 flag = false;
                 if (mcount > medicine.medicineCount) {
                     alert("Your count exceeds the medicine Count !");
@@ -158,9 +205,10 @@ function takeOrder(mID) {
                         medicine.medicineCount -= mcount;
                         currentLoggedInUser.userBalance -= tempprice;
                         alert("You have successfully bought the Medicine !");
-                        const newOrder = { orderID: staticOrderID++, medicineID: mID, medicineName: medicine.medicineName, quantity: mcount, price: tempprice, orderStatus: "Ordered" };
+                        const newOrder = { orderID: 0, medicineID: Number(tempID), medicineName: medicine.medicineName, quantity: mcount, price: tempprice, orderStatus: "Ordered" };
                         addOrderDetails(newOrder);
                         document.getElementById("medicineList1").style.display = "block";
+                        updateMedicineDetails(medicine.medicineID, medicine);
                         takeOrderPage();
                     }
                     else {
@@ -170,7 +218,7 @@ function takeOrder(mID) {
             }
         });
         if (flag) {
-            alert("enter valid Quantity!");
+            alert("Invalid ID!");
         }
     });
 }
@@ -196,8 +244,8 @@ function CancelOrderPage() {
         const orderList = yield fetchOrder();
         cancelorderdet.style.width = "fit-content";
         orderList.forEach(order => {
-            if (order.orderStatus == "ordered") {
-                cancelorderdet.innerHTML += `<tr><td>${order.orderID}</td><td>${order.medicineID}</td><td>${order.medicineName}</td><td>${order.quantity}</td><td>${order.price}</td><td>${order.orderStatus}</td><td><button onclick="CancelOrder('${order.orderID}')">Cancel</button></td></tr>`;
+            if (order.orderStatus == "Ordered") {
+                cancelorderdet.innerHTML += `<tr><td>${order.orderID}</td><td>${order.medicineID}</td><td>${order.medicineName}</td><td>${order.quantity}</td><td>${order.price}</td><td>${order.orderStatus}</td><td><button id="cancelbtn" onclick=CancelOrder("${order.orderID}")>Cancel</button></td></tr>`;
             }
         });
     });
@@ -207,20 +255,22 @@ function CancelOrder(orderID) {
         const orderList = yield fetchOrder();
         orderList.forEach((order) => __awaiter(this, void 0, void 0, function* () {
             if (orderID == order.orderID) {
-                if (order.orderStatus == "ordered") {
+                if (order.orderStatus == "Ordered") {
                     order.orderStatus = "cancelled";
                     currentLoggedInUser.userBalance += order.price;
                     const medicineList = yield fetchMedicines();
                     medicineList.forEach(medicine => {
                         if (medicine.medicineID == order.medicineID) {
                             medicine.medicineCount += order.quantity;
+                            updateMedicineDetails(medicine.medicineID, medicine);
                         }
+                        let id = Number(orderID);
+                        updateOrderDetails(id, order);
                     });
                     alert("Order is now Cancelled ! ");
                 }
             }
         }));
-        CancelOrderPage();
     });
 }
 function orderHistory() {
@@ -267,6 +317,9 @@ function TopUpPage() {
     document.getElementById("cancelOrderPage").style.display = "none";
     document.getElementById("walletBalancePage").style.display = "none";
     document.getElementById("topupPage").style.display = "block";
+    let balancedet = document.getElementById("walletBalance");
+    balancedet.innerHTML = `<h2>Your Balance : ${currentLoggedInUser.userBalance}</h2>`;
+    balancedet.style.display = "block";
 }
 function TopUp() {
     let amount = parseInt(document.getElementById("topUpAmount").value);
@@ -347,6 +400,7 @@ function updateOrderDetails(id, OrderDetails) {
         if (!response.ok) {
             throw new Error("Failed to add User Details");
         }
+        CancelOrderPage();
     });
 }
 function deleteMedicineDetails(id) {
@@ -357,6 +411,7 @@ function deleteMedicineDetails(id) {
         if (!response.ok) {
             throw new Error('Failed to delete contact');
         }
+        showMedicinePage();
     });
 }
 function fetchUsers() {

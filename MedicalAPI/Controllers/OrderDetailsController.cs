@@ -9,26 +9,28 @@ using Microsoft.Extensions.Logging;
 
 namespace MedicalAPI.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
     public class OrderDetailsController : Controller
     {
 
-        private static List<OrderDetails> orderList = new List<OrderDetails>
+        private readonly ApplicationDBContext _dbContext;
+        public OrderDetailsController(ApplicationDBContext applicationDBContext)
         {
-            new OrderDetails{OrderID = 1,MedicineID=1,MedicineName="Paracetamol",Quantity=2,Price=10,OrderStatus="Ordered"},
-            new OrderDetails{OrderID= 2,MedicineID=2,MedicineName="Colpol",Quantity=2,Price=10,OrderStatus="Ordered"},
-            new OrderDetails{OrderID= 3,MedicineID=3,MedicineName="Stepsil",Quantity=2,Price=10,OrderStatus="Ordered"}
-        };
+            _dbContext=applicationDBContext;
+        }
         [HttpGet]
-        public IActionResult Index()
+    //Get Details
+        public IActionResult GetOrderDetails()
         {
-            return Ok(orderList);
+            return Ok(_dbContext.orders.ToList());
         }
 
+
         [HttpGet("{id}")]
-        public IActionResult GetOrderDetails(int id)
+        public IActionResult GetIndividualOrderDetails(int id)
         {
-            var order = orderList.Find(m=>m.MedicineID == id);
+            var order=_dbContext.orders.FirstOrDefault(order=>order.OrderID==id);
             if(order==null)
             {
                 return NotFound();
@@ -36,34 +38,46 @@ namespace MedicalAPI.Controllers
             return Ok(order);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult PutOrderDetails(int id,[FromBody] OrderDetails order)
+        [HttpPost]
+        public IActionResult AddOrderDetails([FromBody] OrderDetails order)
         {
-            var index = orderList.FindIndex(temporder=>temporder.OrderID==id);
-            if(index<0)
+            _dbContext.orders.Add(order);
+            _dbContext.SaveChanges();
+            return Ok();
+        }
+
+        //Update Details
+        [HttpPut("{id}")]
+        public IActionResult UpdateOrderDetails(int id,[FromBody] OrderDetails orderNew)
+        {
+            var orderOld=_dbContext.orders.FirstOrDefault(order=>order.OrderID==id);
+            if(orderOld==null)
             {
                 return NotFound();
             }
+            
+            orderOld.MedicineID = orderNew.MedicineID;
+            orderOld.MedicineName = orderNew.MedicineName;
+            orderOld.Quantity = orderNew.Quantity;
+            orderOld.Price = orderNew.Price;
+            orderOld.OrderStatus = orderNew.OrderStatus;
+            _dbContext.SaveChanges();
             return Ok();
         }
 
-        [HttpPost]
-        public IActionResult PostOrderDetails([FromBody] OrderDetails order)
-        {
-            orderList.Add(order);
-            return Ok();
-        }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeteletOrderDetails([FromBody] OrderDetails order)
-        {
-            var index = orderList.FindIndex(order1=> order1==order);
-            if(index>0)
-            {
-                orderList.Remove(order);
-                return Ok();
-            }
-            return NotFound();
-        }
+
+        // [HttpDelete("{id}")]
+        // public IActionResult DeleteMedicine(int id)
+        // {
+        // var medicine=_dbContext.medicines.FirstOrDefault(medicine=>medicine.MedicineID==id);
+        //     if(medicine==null)
+        //     {
+        //         return NotFound();
+        //     }
+        //     _dbContext.medicines.Remove(medicine);
+        //     _dbContext.SaveChanges();
+        //     return Ok();
+        // }
     }
 }

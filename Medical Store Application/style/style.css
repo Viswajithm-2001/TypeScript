@@ -1,3 +1,86 @@
+body{
+    background-color: khaki;
+}
+.welcome{
+    width: 100%;
+}
+.welcome button{
+background-color: red;
+color: white;
+}
+.welcome button:hover{
+    background-color: #fff;
+    color: red;
+}
+#orderbtn{
+    padding: 10px;
+    color: white;
+    background-color: green;
+}
+#signoutbtn{
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: red;
+    color: white;
+}
+#signoutbtn:hover{
+    background-color: white;
+    color: black;
+}
+#editbtn,#takeorderbtn{
+    padding: 10px 15px;
+    background-color: blue;
+    color: white;
+}
+#editbtn :hover,#takeorderbtn :hover{
+
+    background-color: white;
+    color: blue;
+}
+#deletebtn,#cancelbtn{
+    padding: 10px 20px;
+    background-color: red;
+    color: white;
+}
+#deletebtn,#cancelbtn :hover{
+    padding: 10px 20px;
+    background-color: white;
+    color: black;
+}
+#addMedicine:hover{
+    padding: 10px 20px;
+    background-color: white;
+    color: black;
+}
+#addMedicine{
+    padding: 10px 20px;
+    background-color: red;
+    color: white;
+}
+#deletebtn:hover{
+    padding: 10px 20px;
+    background-color: white;
+    color: black;
+}
+#recharge{
+    padding: 10px;
+    background-color: green;
+    color: white;
+}
+#recharge :hover{
+    background-color: #fff;
+    color: black;
+}
+#signoutbtn{
+    justify-content: right;
+    margin-left: auto;
+}
+#signoutbtn button{
+    padding: 10px;
+    border: none;
+    background-color: red;
+}
 .homepage{
     display: flex;
     flex-direction: column;

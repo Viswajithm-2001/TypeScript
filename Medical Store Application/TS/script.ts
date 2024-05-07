@@ -1,19 +1,20 @@
-let staticUserID: number = 4;
-let staticMedicineID: number = 6;
-let staticOrderID: number = 4;
+
 let currentLoggedInUser: UserDetails;
 interface UserDetails {
     userID: number;
     userName: string;
     userPhoneNumber: number;
+    userMailID: string;
+    password: string;
     userBalance: number;
 }
 
 interface MedicineDetails {
     medicineID: number;
     medicineName: string;
-    medicineCount: number
-    medicinePrice: number
+    medicineCount: number;
+    expiryDate: string;
+    medicinePrice: number;
 
 }
 
@@ -27,42 +28,74 @@ interface OrderDetails {
 
 }
 
-let editingID : number;
-
+let editingID: number;
+function homepage() {
+    (document.getElementById("medicinePage") as HTMLTableElement).style.display = "none";
+    (document.getElementById("orderHistorypage") as HTMLTableElement).style.display = "none";
+    (document.getElementById("cancelOrderPage") as HTMLDivElement).style.display = "none";
+    (document.getElementById("takeOrderPage") as HTMLTableElement).style.display = "none";
+    (document.getElementById("walletBalancePage") as HTMLDivElement).style.display = "none";
+    (document.getElementById("topupPage") as HTMLDivElement).style.display = "none";
+    (document.getElementById("homepage") as HTMLDivElement).style.display = "block";
+    (document.getElementById("welcomemsg") as HTMLDivElement).style.display = "none";
+    (document.getElementById("loggedInPage") as HTMLDivElement).style.display = "none";
+    (document.getElementById("signoutbtn") as HTMLDivElement).style.display = "none";
+}
 function homesignin() {
     (document.getElementById("signinpage") as HTMLDivElement).style.display = "block";
     (document.getElementById("homepage") as HTMLDivElement).style.display = "none";
+    homepage();
+    (document.getElementById("signuppage") as HTMLDivElement).style.display = "none";
 }
 function homesignup() {
     (document.getElementById("signuppage") as HTMLDivElement).style.display = "block";
     (document.getElementById("homepage") as HTMLDivElement).style.display = "none";
+    homepage();
+    (document.getElementById("signinpage") as HTMLDivElement).style.display = "none";
 }
 async function signUp() {
     let username: string = (document.getElementById("signUpUserName") as HTMLInputElement).value;
     let phoneNumber: number = parseInt((document.getElementById("signUpPhoneNumber") as HTMLInputElement).value);
     let balance: number = parseInt((document.getElementById("signUpBalance") as HTMLInputElement).value);
-    const newUser: UserDetails = { userID: staticUserID++, userName: username, userPhoneNumber: phoneNumber, userBalance: balance };
-    addUserDetails(newUser);
+    let mailID: string = (document.getElementById("signUpMail") as HTMLInputElement).value;
+    let upassword: string = (document.getElementById("signUpPwd") as HTMLInputElement).value;
+    let cpassowrd: string = (document.getElementById("confirmpwd")as HTMLInputElement).value;
+    if(upassword==cpassowrd){
+        const newUser: UserDetails = { userID: 0, userName: username, userPhoneNumber: phoneNumber, userBalance: balance, userMailID: mailID, password: upassword };
+        addUserDetails(newUser);
+    }
+    else{
+        alert("Enter same password")
+    }
 
-    
+
     (document.getElementById("signuppage") as HTMLDivElement).style.display = "none";
     (document.getElementById("homepage") as HTMLDivElement).style.display = "block";
 }
 
 async function signIn() {
-    let userID: number = parseInt((document.getElementById("signInUserID") as HTMLInputElement).value);
+    let mailID: string = (document.getElementById("signInUserID") as HTMLInputElement).value;
+    let password: string = (document.getElementById("signinpwd") as HTMLInputElement).value;
     let flag: boolean = true;
     const userArrayList = await fetchUsers();
     userArrayList.forEach(element => {
-        if (element.userID === userID) {
-            currentLoggedInUser = element;
-            flag = false;
-            alert("You Have successfully logged in ! ");
-            (document.getElementById("welcome") as HTMLDivElement).style.display = "block";
-            (document.getElementById("welcomemsg") as HTMLElement).innerHTML = `<h2>Hi ${currentLoggedInUser.userName}</h2>`;
-            (document.getElementById("loggedInPage") as HTMLDivElement).style.display = "flex";
-            (document.getElementById("signinpage") as HTMLDivElement).style.display = "none";
-
+        if (element.userMailID === mailID) {
+            if (element.password==password) {
+                currentLoggedInUser = element;
+                flag = false;
+                alert("You Have successfully logged in ! ");
+                (document.getElementById("welcome") as HTMLDivElement).style.display = "block";
+                (document.getElementById("welcomemsg") as HTMLElement).innerHTML = `<h2>Hi ${currentLoggedInUser.userName}</h2>`;
+                (document.getElementById("signoutbtn") as HTMLDivElement).style.display = "block";
+                (document.getElementById("welcomemsg") as HTMLDivElement).style.display = "flex";
+                (document.getElementById("loggedInPage") as HTMLDivElement).style.display = "flex";
+                (document.getElementById("signinpage") as HTMLDivElement).style.display = "none";
+                (document.getElementById("signuppage") as HTMLDivElement).style.display = "none";
+                (document.getElementById("homepage") as HTMLDivElement).style.display = "none";
+            }
+            else{
+                alert("Invalid Password")
+            }
         }
     });
     if (flag) {
@@ -82,12 +115,13 @@ async function showMedicinePage() {
     <th>Medicine Name</th>
     <th>Quantity</th>
     <th>Price</th>
+    <th>Expiry Date </th>
     <th>Action</th>
 </tr>`
     const medicineList = await fetchMedicines();
     medicineList.forEach(medicine => {
         if (medicine.medicineCount > 0) {
-            medicinedet.innerHTML += `<tr><td>${medicine.medicineName}</td><td>${medicine.medicineCount}</td><td>${medicine.medicinePrice}</td><td><button onclick = "EditMedicine('${medicine.medicineID}')">Edit</button><button onclick="deleteMedicineDetails('${medicine.medicineID}')">Delete</button></td></tr>`
+            medicinedet.innerHTML += `<tr><td>${medicine.medicineName}</td><td>${medicine.medicineCount}</td><td>${medicine.medicinePrice}</td><td>${medicine.expiryDate.split("T")[0].split("-").reverse().join("/")}</td><td><button id="editbtn" onclick = "EditMedicine('${medicine.medicineID}')">Edit</button><button id="deletebtn" onclick="DeleteMedicine('${medicine.medicineID}')">Delete</button></td></tr>`
         }
     });
 }
@@ -95,43 +129,49 @@ async function AddMedicine() {
     let mName = (document.getElementById("mName") as HTMLInputElement).value;
     let mQuantity = parseInt((document.getElementById("mQuantity") as HTMLInputElement).value);
     let mPrice = parseInt((document.getElementById("mPrice") as HTMLInputElement).value);
-    const newMedicine: MedicineDetails = { medicineID: staticMedicineID++, medicineName: mName, medicineCount: mQuantity, medicinePrice: mPrice };
+    let mExpiry = (document.getElementById("mExpiry") as HTMLInputElement).value;
+    const newMedicine: MedicineDetails = { medicineID: 0, medicineName: mName, medicineCount: mQuantity, medicinePrice: mPrice, expiryDate: mExpiry };
     addMedicineDetails(newMedicine);
     alert("Medicine Added Successfully !");
     showMedicinePage();
 }
-async function EditMedicine(mId : number){
-    alert("medicine")
-let mName = (document.getElementById("mName") as HTMLInputElement);
-let mQuantity = (document.getElementById("mQuantity") as HTMLInputElement);
-let mPrice = (document.getElementById("mPrice") as HTMLInputElement);
+async function EditMedicine(mId: number) {
+    let mName = (document.getElementById("mName") as HTMLInputElement);
+    let mQuantity = (document.getElementById("mQuantity") as HTMLInputElement);
+    let mPrice = (document.getElementById("mPrice") as HTMLInputElement);
 
-const medicineList = await fetchMedicines();
-medicineList.forEach(list=>{
-    if(list.medicineID==mId){
-        editingID = mId;
-        mName.value=list.medicineName;
-        mQuantity.value = String(list.medicineCount);
-        mPrice.value = String(list.medicinePrice);
+    const medicineList = await fetchMedicines();
+    medicineList.forEach(list => {
+        if (list.medicineID == mId) {
+            editingID = mId;
+            mName.value = list.medicineName;
+            mQuantity.value = String(list.medicineCount);
+            mPrice.value = String(list.medicinePrice);
+        }
     }
-}
-)
-}
-
-function Edit()
-{
-let mName = (document.getElementById("mName") as HTMLInputElement).value;
-let mQuantity = (document.getElementById("mQuantity") as HTMLInputElement).value;
-let mPrice = (document.getElementById("mPrice") as HTMLInputElement).value;
-const medicine: MedicineDetails = {
-    medicineID:editingID,
-    medicineName:mName,
-    medicineCount:Number(mQuantity),
-    medicinePrice:Number(mPrice)
-}
-updateMedicineDetails(editingID,medicine)
+    )
 }
 
+function Edit() {
+    let mName = (document.getElementById("mName") as HTMLInputElement).value;
+    let mQuantity = (document.getElementById("mQuantity") as HTMLInputElement).value;
+    let mPrice = (document.getElementById("mPrice") as HTMLInputElement).value;
+    let mExpiry = (document.getElementById("mExpiry") as HTMLInputElement).value;
+    const medicine: MedicineDetails = {
+        medicineID: editingID,
+        medicineName: mName,
+        medicineCount: Number(mQuantity),
+        medicinePrice: Number(mPrice),
+        expiryDate: mExpiry
+    }
+    updateMedicineDetails(editingID, medicine);
+    alert("Updated successfully !")
+}
+
+function DeleteMedicine(mID: number) {
+    let id = mID;
+    deleteMedicineDetails(id);
+}
 
 async function takeOrderPage() {
     (document.getElementById("medicinePage") as HTMLTableElement).style.display = "none";
@@ -149,24 +189,30 @@ async function takeOrderPage() {
     <th>Medicine Name</th>
     <th>Quantity</th>
     <th>Price</th>
+    <th>Expiry Date</th>
     <th>Action</th>
 </tr>`
     const medicineList = await fetchMedicines();
     medicineList.forEach(medicine => {
         if (medicine.medicineCount > 0) {
-            medicinedet.innerHTML += `<tr><td>${medicine.medicineName}</td><td>${medicine.medicineCount}</td><td>${medicine.medicinePrice}</td><td><button onclick ="takeOrder('${medicine.medicineID}')">Buy</button></td></tr>`
+            medicinedet.innerHTML += `<tr><td>${medicine.medicineName}</td><td>${medicine.medicineCount}</td><td>${medicine.medicinePrice}</td><td>${medicine.expiryDate.split("T")[0].split("-").reverse().join("/")}</td><td><button id="takeorderbtn" onclick ="takeOrder('${medicine.medicineID}')">Buy</button></td></tr>`
         }
     });
 
 }
-
+let tempID: number;
 async function takeOrder(mID: number) {
+    alert("medicine selected successfully")
+    tempID = Number(mID);
 
+}
+
+async function submitOrder() {
     let mcount: number = parseInt((document.getElementById("medicineCount") as HTMLInputElement).value);
     let flag: boolean = true;
     const medicineList = await fetchMedicines();
     medicineList.forEach(medicine => {
-        if (mID == medicine.medicineID) {
+        if (Number(tempID) == medicine.medicineID) {
             flag = false;
             if (mcount > medicine.medicineCount) {
                 alert("Your count exceeds the medicine Count !");
@@ -177,9 +223,10 @@ async function takeOrder(mID: number) {
                     medicine.medicineCount -= mcount;
                     currentLoggedInUser.userBalance -= tempprice;
                     alert("You have successfully bought the Medicine !");
-                    const newOrder: OrderDetails = { orderID: staticOrderID++, medicineID: mID, medicineName: medicine.medicineName, quantity:mcount,price:tempprice,orderStatus:"Ordered"};
+                    const newOrder: OrderDetails = { orderID: 0, medicineID: Number(tempID), medicineName: medicine.medicineName, quantity: mcount, price: tempprice, orderStatus: "Ordered" };
                     addOrderDetails(newOrder);
                     (document.getElementById("medicineList1") as HTMLTableElement).style.display = "block";
+                    updateMedicineDetails(medicine.medicineID, medicine);
                     takeOrderPage();
 
                 }
@@ -190,11 +237,9 @@ async function takeOrder(mID: number) {
         }
     });
     if (flag) {
-        alert("enter valid Quantity!");
+        alert("Invalid ID!");
     }
-
 }
-
 async function CancelOrderPage() {
     (document.getElementById("medicinePage") as HTMLTableElement).style.display = "none";
     (document.getElementById("orderHistorypage") as HTMLTableElement).style.display = "none";
@@ -217,8 +262,8 @@ async function CancelOrderPage() {
     const orderList = await fetchOrder();
     cancelorderdet.style.width = "fit-content";
     orderList.forEach(order => {
-        if (order.orderStatus == "ordered") {
-            cancelorderdet.innerHTML += `<tr><td>${order.orderID}</td><td>${order.medicineID}</td><td>${order.medicineName}</td><td>${order.quantity}</td><td>${order.price}</td><td>${order.orderStatus}</td><td><button onclick="CancelOrder('${order.orderID}')">Cancel</button></td></tr>`;
+        if (order.orderStatus == "Ordered") {
+            cancelorderdet.innerHTML += `<tr><td>${order.orderID}</td><td>${order.medicineID}</td><td>${order.medicineName}</td><td>${order.quantity}</td><td>${order.price}</td><td>${order.orderStatus}</td><td><button id="cancelbtn" onclick=CancelOrder("${order.orderID}")>Cancel</button></td></tr>`;
         }
     });
 
@@ -227,20 +272,22 @@ async function CancelOrder(orderID: number) {
     const orderList = await fetchOrder();
     orderList.forEach(async order => {
         if (orderID == order.orderID) {
-            if (order.orderStatus == "ordered") {
+            if (order.orderStatus == "Ordered") {
                 order.orderStatus = "cancelled";
                 currentLoggedInUser.userBalance += order.price;
                 const medicineList = await fetchMedicines();
                 medicineList.forEach(medicine => {
                     if (medicine.medicineID == order.medicineID) {
                         medicine.medicineCount += order.quantity;
+                        updateMedicineDetails(medicine.medicineID, medicine);
                     }
+                    let id: number = Number(orderID)
+                    updateOrderDetails(id, order);
                 });
                 alert("Order is now Cancelled ! ");
             }
         }
     });
-    CancelOrderPage();
 
 }
 
@@ -288,6 +335,9 @@ function TopUpPage() {
     (document.getElementById("cancelOrderPage") as HTMLDivElement).style.display = "none";
     (document.getElementById("walletBalancePage") as HTMLDivElement).style.display = "none";
     (document.getElementById("topupPage") as HTMLDivElement).style.display = "block";
+    let balancedet = (document.getElementById("walletBalance") as HTMLElement);
+    balancedet.innerHTML = `<h2>Your Balance : ${currentLoggedInUser.userBalance}</h2>`;
+    balancedet.style.display = "block"
 }
 function TopUp() {
     let amount = parseInt((document.getElementById("topUpAmount") as HTMLInputElement).value);
@@ -363,8 +413,6 @@ async function updateMedicineDetails(id: number, MedicineDetails: MedicineDetail
         throw new Error("Failed to add User Details");
     }
     showMedicinePage();
-    
-
 }
 
 async function updateOrderDetails(id: number, OrderDetails: OrderDetails): Promise<void> {
@@ -379,6 +427,7 @@ async function updateOrderDetails(id: number, OrderDetails: OrderDetails): Promi
     if (!response.ok) {
         throw new Error("Failed to add User Details");
     }
+    CancelOrderPage();
 }
 
 async function deleteMedicineDetails(id: number): Promise<void> {
@@ -389,6 +438,7 @@ async function deleteMedicineDetails(id: number): Promise<void> {
     if (!response.ok) {
         throw new Error('Failed to delete contact');
     }
+    showMedicinePage();
 
 }
 
