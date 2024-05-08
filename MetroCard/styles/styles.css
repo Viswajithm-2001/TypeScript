@@ -1,0 +1,216 @@
+body{
+    background-color: khaki;
+}
+.container{
+    border:1px solid rgb(9, 47, 181);
+    background-color: whitesmoke;
+    border-radius: 5px;
+    width:fit-content;
+    height: fit-content;
+    padding: 3%;
+    margin: 0 auto;
+    margin-top:5rem;
+    flex:wrap;
+    font-family:sans-serif;
+}
+.register1{
+    flex:wrap;
+    width:12rem;
+    height:2.5rem;
+    margin-top:5vh;
+    margin-left:1.5vw;
+    background-color: rgb(4, 33, 76);
+    color:white;
+    border-radius:0.5rem;
+    font-weight: bold;
+}
+.login1{
+    flex:wrap;
+    width:12rem;
+    height:2.5rem;
+    margin-top:5vh;
+    margin-left:1vw;
+    background-color: rgb(4, 33, 76);
+    color:white;
+    border-radius:0.5rem;
+    font-weight: bold;
+}
+.register{
+    display:none;
+    padding-left: 5rem;
+    margin-top:8vh;
+    flex:wrap;
+}
+.name{
+    flex:wrap;
+    width:17rem;
+    height: 1.5rem;
+}
+.mail{
+    flex:wrap;
+    width:17rem;
+    height: 1.5rem;
+    margin-top:3vh;
+}
+.pass{
+    flex:wrap;
+    width:17rem;
+    height: 1.5rem;
+    margin-top:3vh;
+}
+.conpass{
+    flex:wrap;
+    width:17rem;
+    height: 1.5rem;
+    margin-top:3vh;
+}
+.mobile{
+    flex:wrap;
+    width:17rem;
+    height: 1.5rem;
+    margin-top:3vh;
+}
+.submit{
+    flex:wrap;
+    width:10rem;
+    height:2rem;
+    margin-top:5vh;
+    margin-left:4vw;
+    color:white;
+    font-weight: bold;
+    border-radius:0.5rem;
+    background-color: rgb(4, 33, 76);
+}
+.login{
+    padding-left:5rem;
+    margin-top:10vh;
+    flex:wrap;
+}
+.mail2{
+    flex:wrap;
+    width:17rem;
+    height: 1.5rem;
+}
+.pass2{
+    flex:wrap;
+    width:17rem;
+    height: 1.5rem;
+    margin-top:4vh;
+}
+.submit1{
+    flex:wrap;
+    width:10rem;
+    height:2rem;
+    margin-top:5vh;
+    margin-left:4vw;
+    color:white;
+    font-weight: bold;
+    border-radius:0.5rem;
+    background-color: rgb(4, 33, 76);
+}
+.navbar{
+    display:none;
+    background-color:rgb(4, 33, 76) ;
+    color:white;
+    min-width:50rem;
+    height:3rem;
+}
+.navlist{
+    display:flex;
+    text-decoration: none;
+    list-style-type: none;
+    justify-content: space-evenly;
+    font-family:sans-serif;
+    font-weight: bold;
+    font-size: 1rem;
+    padding-top:2vh;
+}
+.navlist :hover{
+    cursor: pointer;
+    padding: 10px;
+    background-color: #fff;
+    color: black;
+}
+.recharge{
+    display:none;
+}
+.travelhistory{
+    text-align:center;
+    display:none;
+    margin-top:-16vh;
+}
+.table,th,td{
+    border:2px solid black;
+    border-collapse: collapse;
+    width:7rem;
+    height:2rem;
+}
+.travel{
+    display:none;
+    text-align:center;
+    margin-top:-16vh;
+}
+.table1,th,td{
+    border:2px solid black;
+    border-collapse: collapse;
+}
+.home-tab{
+    margin-top: 20vh;
+    margin-left: 30vw;
+    font-size:30px;
+    font-weight: bold;
+    font-family:sans-serif;
+}
+.showbalance{
+    margin-left: 30vw;
+    margin-top: 5vh;
+    font-size:3rem;
+    font-weight: bold;
+    font-family:sans-serif;
+}
+.recharge{
+    margin-left: 30vw;
+    font-size:3rem;
+    font-weight: bold;
+    font-family:sans-serif;
+}
+#amount{
+    margin-top:3vh;
+    height:2rem;
+    width:25rem;
+}
+.recsubmit{
+    height:3rem;
+    margin-left:8vw;
+    margin-top:5vh;
+    width:7rem;
+}
+.travellocation{
+    display:none;
+    margin-top:2vh;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: sans-serif;
+}
+#fromlocation{
+    flex:wrap;
+    width:17rem;
+    height: 1.5rem;
+    margin-top:2vh;
+}
+#tolocation{
+    flex:wrap;
+    width:17rem;
+    height: 1.5rem;
+    margin-top:4vh;
+}
+.toloctext{
+    position: relative;
+    top:2vh;
+}
+.book
+{
+    margin-top:3vh;
+    height:2rem;
+    width:7rem
+}

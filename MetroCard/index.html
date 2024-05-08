@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Metro Card</title>
+        <link rel="stylesheet" href="styles/styles.css">
+    </head>
+    <body class="body">
+        <div class="container" id="container">
+            <button onclick="ClickRegister()" class="register1">Register</button><button onclick="ClickLogIn()" class="login1">LogIn</button>
+            <div class="register" id="register">
+                <input class="name" id="name" type="text" placeholder="Enter Name"><br>
+                <input class="mail" id="mail" type="text" placeholder="Enter Mail"><br>
+                <input class="pass" id="pass" type="password" placeholder="Enter Password"><br>
+                <input class="conpass" id="conpass" type="password" placeholder="Enter Confirm Password"><br>
+                <input class="mobile" id="mobile" type="text" placeholder="Enter Mobile Number"><br>
+                <button onclick="SubRegister()" class="submit">Submit</button>
+            </div>
+            <div class="login" id="login">
+                <input class="mail2" id="mail2" type="text" placeholder="Enter Mail"><br>
+                <input class="pass2" id="pass2" type="password" placeholder="Enter Password"><br>
+                <button onclick="SubLogIn()" class="submit1">Submit</button>
+            </div>
+        </div>
+        <div class="navbar" id="nav">
+            <ul class="navlist">
+                <li onclick="Home()">Home</li>
+                <li onclick="ShowBalance()">Balance</li>
+                <li onclick="Recharge()">Recharge</li>
+                <li onclick="TravelHistory()"><span>Travel History</span></li>
+                <li onclick="Ticket()">Ticket Fair</li>
+            </ul>
+        </div>
+        <div class="home-tab" id="home-tab">
+            <p id="home"></p>
+        </div>
+        <div class="showbalance" id="showbalance">
+            <p id="balance" class="balance"></p>
+        </div>
+        <div class="recharge" id="recharge">
+            <label class="rechargetext">Recharge</label><br>
+            <input id="amount" type="number" placeholder="Enter Amount"><br>
+            <button onclick="TopUp()" class="recsubmit">Submit</button>
+        </div>
+        <div class="travelhistory" id="travelhistory">
+            <table class="table" id="table"></table>
+        </div>
+        <div class="travel" id="travel">
+            <table class="table1" id="table1"></table>
+        </div>
+        <div class="travellocation" id="travellocation">
+            <label><span>From Location</span></label><br>
+            <input id="noOfTickets" type="number" placeholder="Enter no Of Tickets"><br>
+            <button class="book" onclick="Book()">Book</button>
+        </div>
+        <div id="logout">
+            <p id="exit"></p>
+        </div>
+    </body>
+    <script src="JS/index.js"></script>
+</html>

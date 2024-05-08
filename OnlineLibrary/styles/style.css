@@ -1,0 +1,49 @@
+body{
+    background-color: khaki;
+}
+
+#sign-up
+{
+    display: none;
+}
+#sign-in{
+    display: none;
+}
+#sign-up div{
+    margin: 1rem;
+}
+#navbar{
+    display: none;
+}
+#book-details
+{
+    display: none;
+}
+#borrow-book
+{
+    display: none;
+}
+#borrow-histroy
+{
+    display: none;
+}
+#return-book
+{
+    display: none;
+}
+#recharge
+{
+    display: none;
+}
+#top-up
+{
+    display: none;
+}
+#show-count
+{
+    display: none;
+}
+#add-book
+{
+    display: none;
+}
